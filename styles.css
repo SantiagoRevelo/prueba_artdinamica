@@ -1,0 +1,49 @@
+.dates {
+    border: 1px solid #ebeff2;
+    border-radius: 5px;
+    padding: 20px 0px;
+    margin: 10px 20px;
+    font-size: 16px;
+    color: #5aadef;
+    font-weight: 600;
+    overflow: auto;
+}
+
+.dates div {
+    float: left;
+    width: 50%;
+    text-align: center;
+    position: relative;
+}
+
+.dates strong,
+.info-group strong {
+    display: block;
+    color: #adb8c2;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.dates span {
+    width: 1px;
+    height: 40px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    background: #ebeff2;
+}
+
+.info-group {
+    overflow: auto;
+    padding: 15px 0;
+    font-size: 16px;
+    color: #59687f;
+    font-weight: 600;
+    margin: 10px 20px;
+}
+
+.info-panel {
+    background-color: #ffffff;
+    border-radius: 5px;
+    border: solid 1px #2c2c2c;
+}
