@@ -7,7 +7,7 @@
     
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
     <head>
         <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -21,7 +21,28 @@
     </head>
 
     <body>
-        <div class="container">     
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <a class="navbar-brand" href="/">Artdinamica</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/prueba_php">Prueba PHP <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item ">
+                        <a class="nav-link" href="/modelo_datos">Modelo de datos</a>
+                    </li>
+                </ul>
+                <form class="form-inline my-2 my-lg-0">
+                    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                </form>
+            </div>
+        </nav>
+        <div class="container my-4">     
                 <?php
                     foreach ($schedule as $emp) {
                         if ( $emp['job_hours'] > $emp['average_hours_by_day'] ) {
@@ -50,6 +71,9 @@
                             </div>
                             <div class="collapse multi-collapse" id="employeeInfo<?php echo $emp['employee_id']; ?>">
                                 <div class="info-panel">
+                                    <div>
+                                        <img class="photo" src="<?php echo $emp['photo']; ?>" alt="<?php $emp['name'] . ' ' .$emp['lastname'] ?>">
+                                    </div>
                                     <div class="dates">
                                         <div class="start">
                                             <strong>Inicio del contrato</strong> <?php echo $emp['start_date'] ?>

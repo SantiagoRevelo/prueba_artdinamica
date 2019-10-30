@@ -1,4 +1,5 @@
 <?php
+// Connection data -> Change the access data for your owns
     $user   = "db_user";
     $pass   = "123456789";
     $server = "localhost";
@@ -10,16 +11,17 @@
         echo "Failed to connect to MySQL: " . mysqli_connect_error();
     }
 
+    // gets employees from BBDD
     function get_employees() {
         $q = '  
-                SELECT  t1.id, t1.name, t1.lastname, t1.address, t1.birth_date, t1.dni, 
+                SELECT  t1.id, t1.name, t1.lastname, t1.address, t1.birth_date, t1.dni, t1.photo,
                         t2.start_date, t2.finish_date, 
                         t3.name as "location", 
                         t4.name as "charge", t4.job_hours, t4.entrance_time, t4.exit_time
                 FROM employees t1, contracts t2 , workplaces t3, roles t4
                 WHERE t1.contract_id = t2.id AND t2.workplace_id = t3.id AND t2.role_id = t4.id;
         ';
-        $result = get_data_from_ddbb( $q );
+        $result = do_query( $q );
         $employees = [];
         while ( $row = $result->fetch_object() ){
             $employees[] = $row;
@@ -27,16 +29,19 @@
         return $employees;
     }
 
+    // Gets the user input hours
     function get_user_reports( $employee_id ) {
         $q = 'SELECT * FROM reports where employee_id = ' .$employee_id;
-        $result = get_data_from_ddbb( $q );
+        $result = do_query( $q );
         $reports= [];
         while ( $row = $result->fetch_object() ){
             $reports[] = $row;
         }
         return $reports;
     }
-    function get_data_from_ddbb($query) {
+
+    // Exec a query in BBDD
+    function do_query( $query ) {
         global $connection, $bbdd;
         $db = mysqli_select_db( $connection, $bbdd ) or die( 'No se puede conectar con la bbdd: ' .$bbdd );
         $result = mysqli_query( $connection, $query ) or die( 'No se ha podido realizar la consulta: ' .$query);
@@ -44,6 +49,24 @@
         return $result;
     }
 
+    // Updates BBDD  qith deviations
+    function save_employee_deviation( $employee_id, $deviation ) {
+        $today = date("Y-m-d");
+        // check if deviation data exist for today
+        $q = 'SELECT * FROM deviations where employee_id = ' .$employee_id .' AND update_date = "' .$today .'";'; 
+        $reg = do_query($q);
+
+        if ( mysqli_num_rows( $reg ) === 0 ) {
+            // insert
+            $q = "INSERT INTO deviations VALUES (NULL, '" .$employee_id ."', '" .$deviation ."', '" .$today ."');";
+            $insert = do_query($q);
+            $row2 = $insert->fetch_object();
+            var_dump ($row2);
+        }
+        
+    }
+
+    // Main algorithm than check the employees job hours
     function check_contract_hours() {
         // Get employees
         $employees = get_employees();
@@ -122,6 +145,7 @@
             // Set the time report of an employee
             $tmp_report = Array(
                 'employee_id' => $emp->id,
+                'photo' => $emp->photo,
                 'name' => $emp->name,
                 'lastname' => $emp->lastname,
                 'address' => $emp->address,
@@ -146,12 +170,10 @@
                     'days_incomplete_dates' => $tmp_days_incomplete,
                 )
             );
+            save_employee_deviation($emp->id, $employee_deviation);
+
             $employees_schedule[] = $tmp_report;
         }
-        // Dump the full timeReport
-        //var_dump($employees_schedule);
-        //show_alerts($employees_schedule);
-
         return $employees_schedule;
     }
 ?>
